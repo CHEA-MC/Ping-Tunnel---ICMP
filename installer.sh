@@ -35,8 +35,9 @@ ensure_unzip() {
         echo "Installing unzip..."
 
         if command -v apt-get >/dev/null 2>&1; then
-            apt-get update
-            apt-get install -y unzip
+            # Wait up to 5 minutes if another apt/dpkg process (e.g. unattended-upgrades) holds the lock
+            apt-get -o DPkg::Lock::Timeout=300 update
+            apt-get -o DPkg::Lock::Timeout=300 install -y unzip
         elif command -v dnf >/dev/null 2>&1; then
             dnf install -y unzip
         elif command -v yum >/dev/null 2>&1; then
